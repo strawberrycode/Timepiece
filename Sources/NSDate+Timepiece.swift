@@ -25,7 +25,7 @@ public func - (lhs: NSDate, rhs: NSDate) -> NSTimeInterval {
 
 // MARK: - Equatable
 
-extension NSDate: Equatable {}
+//extension NSDate: Equatable {} // Swift 2: Redundant conformance of 'NSDate' to protocol 'Equatable'
 
 public func == (lhs: NSDate, rhs: NSDate) -> Bool {
     return lhs.isEqualToDate(rhs)
@@ -81,7 +81,7 @@ public extension NSDate {
     }
     
     private var components: NSDateComponents {
-        return calendar.components(.CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitWeekday | .CalendarUnitDay | .CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond, fromDate: self)
+        return calendar.components([.Year, .Month, .Weekday, .Day, .Hour, .Minute, .Second], fromDate: self)
     }
     
     private var calendar: NSCalendar {
@@ -90,12 +90,12 @@ public extension NSDate {
     
     // MARK: - Initialize
     
-    class func date(#year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) -> NSDate {
+    class func date(year year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) -> NSDate {
         let now = NSDate()
-        return now.change(year: year, month: month, day: day, hour: hour, minute: minute, second: second)
+        return now.change(year, month: month, day: day, hour: hour, minute: minute, second: second)
     }
     
-    class func date(#year: Int, month: Int, day: Int) -> NSDate {
+    class func date(year year: Int, month: Int, day: Int) -> NSDate {
         return NSDate.date(year: year, month: month, day: day, hour: 0, minute: 0, second: 0)
     }
     
@@ -131,20 +131,21 @@ public extension NSDate {
     /**
         Initialize a date by changing the weekday of the receiver.
     */
-    func change(#weekday: Int) -> NSDate! {
+    func change(weekday weekday: Int) -> NSDate! {
         return self - (self.weekday - weekday).days
     }
     
     /**
         Initialize a date by changing the time zone of receiver.
     */
-    func change(#timeZone: NSTimeZone) -> NSDate! {
+    func change(timeZone timeZone: NSTimeZone) -> NSDate! {
         let originalTimeZone = calendar.timeZone
         calendar.timeZone = timeZone
         
         let newDate = calendar.dateFromComponents(components)!
         newDate.calendar.timeZone = timeZone
-        objc_setAssociatedObject(newDate, &AssociatedKeys.TimeZone, timeZone, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        objc_setAssociatedObject(newDate, &AssociatedKeys.TimeZone, timeZone, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        // Swift 2: Cannot find an initializer for type 'UInt' that accepts an argument list of type '(objc_AssociationPolicy)' -- removed UInt
         
         calendar.timeZone = originalTimeZone
         
@@ -164,7 +165,7 @@ public extension NSDate {
         return change(day: 1, hour: 0, minute: 0, second: 0)
     }
     var endOfMonth: NSDate {
-        let lastDay = calendar.rangeOfUnit(.CalendarUnitDay, inUnit: .CalendarUnitMonth, forDate: self).length
+        let lastDay = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: self).length
         return change(day: lastDay, hour: 23, minute: 59, second: 59)
     }
 	
