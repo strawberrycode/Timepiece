@@ -27,7 +27,7 @@ public extension NSCalendarUnit {
         // 400 years have 146097 days (taking into account leap year rules)
             
         default:
-            print("warn: .interval for NSCalendarUnit(\(self.rawValue)) can't be determined. Returning 0.", appendNewline: false)
+            print("warn: .interval for NSCalendarUnit(\(self.rawValue)) can't be determined. Returning 0.")
             return 0
         }
     }
