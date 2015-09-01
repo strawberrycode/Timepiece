@@ -168,13 +168,13 @@ public extension NSDate {
         let lastDay = calendar.rangeOfUnit(.Day, inUnit: .Month, forDate: self).length
         return change(day: lastDay, hour: 23, minute: 59, second: 59)
     }
-	
+
 	var beginningOfWeek: NSDate {
-		var daysDiff = (7 + (weekday - calendar.firstWeekday)) % 7
+		let daysDiff = (7 + (weekday - calendar.firstWeekday)) % 7
 		return beginningOfDay - daysDiff.days
 	}
 	var endOfWeek: NSDate {
-		var daysDiff = (7 + ((calendar.firstWeekday - 1) - weekday)) % 7
+		let daysDiff = (7 + ((calendar.firstWeekday - 1) - weekday)) % 7
 		return endOfDay + daysDiff.days
 	}
     
